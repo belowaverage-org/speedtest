@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no, user-scalable=no" />
-<title>HTML5 Speedtest</title>
+<title>BA Speedtest</title>
 <style type="text/css">
 	html,body{
 		border:none; padding:0; margin:0;
@@ -47,7 +47,7 @@
 	}
 	#test{
 		margin-top:2em;
-		margin-bottom:12em;
+		margin-bottom:3em;
 	}
 	div.testArea{
 		display:inline-block;
@@ -159,7 +159,7 @@ function startStop(){
 		initUI();
 	}else{
 		//test is not running, begin
-		w=new Worker('speedtest_worker.min.js');
+		w=new Worker('speedtest_worker.js');
 		w.postMessage('start'); //Add optional parameters as a JSON object to this command
 		I("startStopBtn").className="running";
 		w.onmessage=function(e){
@@ -214,12 +214,23 @@ function initUI(){
 	I("jitText").textContent="";
 	I("ip").textContent="";
 }
-
+w=new Worker('speedtest_worker.js');
+w.postMessage('getip');
+w.onmessage=function(e){
+	data=JSON.parse(e.data);
+	var status=data.testState;
+	if(document.getElementById('ip').innerText !== '...' && document.getElementById('ip').innerText !== '') {
+		w=null;
+	}
+};
 </script>
 </head>
 <body>
-<h1>HTML5 Speedtest</h1>
+<br><br>
+<h1>BA Speedtest</h1>
+<br><br>
 <div id="startStopBtn" onclick="startStop()"></div>
+<br><br><br>
 <div id="test">
 	<div class="testGroup">
 		<div class="testArea">
@@ -249,11 +260,12 @@ function initUI(){
 			<div class="unit">ms</div>
 		</div>
 	</div>
+	<br><br><br><br>
 	<div id="ipArea">
-		IP Address: <span id="ip"></span>
+		IP Address: <strong><span id="ip">...</span></strong>
 	</div>
+	<p>Powered by <strong>belowaverage.org</strong></p>
 </div>
-<a href="https://github.com/adolfintel/speedtest">Source code</a>
 <script type="text/javascript">setTimeout(initUI,100);</script>
 </body>
 </html>
